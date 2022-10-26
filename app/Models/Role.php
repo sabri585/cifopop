@@ -8,4 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Role extends Model
 {
     use HasFactory;
+    
+    //campos de la BDD en los que se permite la asignación masiva
+    protected $fillable = ['rol'];
 }
