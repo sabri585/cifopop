@@ -11,4 +11,9 @@ class Role extends Model
     
     //campos de la BDD en los que se permite la asignación masiva
     protected $fillable = ['rol'];
+    
+    //Método que recupera los usuarios con un determinado rol
+    public function users(){
+        return $this->belongsToMany('App\Models\User');
+    }
 }

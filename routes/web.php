@@ -25,7 +25,7 @@ Route::get('/', [WelcomeController::class, 'index'])->name('portada');
 //CRUD DE ANUNCIOS
 
 //PARA BUSCAR anuncios
-Route::match(['GET','POST'], '/anuncios/search',[BikeController::class, 'search'])
+Route::match(['GET','POST'], '/anuncios/search',[AnuncioController::class, 'search'])
 ->name('anuncios.search');
 
 //eliminación definitiva del anuncio
@@ -78,13 +78,15 @@ Route::get('/contacto', [ContactoController::class, 'index'])
 Route::post('/contacto', [ContactoController::class, 'send'])
 ->name('contacto.email');
 
-//RUTAS PARA EL ADMINISTRADOR
-//llevarán el prefijo admin
-Route::prefix('admin')->middleware('auth', 'is_admin')->group(function(){
+//RUTAS PARA EL ADMINISTRADOR Y EDITOR
+//llevarán el prefijo employed para identificación de rutas
+Route::prefix('employed')->middleware('auth', 'is_admin')->group(function(){
     
-    //ver las motos eliminadas (/admin/deletebikes)
-    Route::get('deletedBikes', [AdminController::class, 'deletedBikes'])->name('admin.deleted.bikes');
+//ver los anuncios eliminados (/admin/deleteAnuncios)
+Route::get('deletedAnuncios', [AdminController::class, 'deletedAnuncios'])->name('admin.deleted.anuncios');
 });
+
+//TODO: crear ruta para gestión de usuarios bloqueados (solo para admin?)
 
 //RUTA DE FALLBACK
 Route::fallback([WelcomeController::class, 'index']);  

@@ -76,12 +76,12 @@
                         </div>
                         
                         <div class="row mb-3">
-                            <label for="ciudad" class="col-md-4 col-form-label text-md-end">{{ __('Poblation') }}</label>
+                            <label for="poblacion" class="col-md-4 col-form-label text-md-end">{{ __('Poblation') }}</label>
 
                             <div class="col-md-6">
-                                <input id="ciudad" type="text" class="form-control @error('ciudad') is-invalid @enderror" name="ciudad" required autocomplete="new-ciudad">
+                                <input id="poblacion" type="text" class="form-control @error('poblacion') is-invalid @enderror" name="poblacion" required autocomplete="new-pobalcion">
 
-                                @error('ciudad')
+                                @error('poblacion')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>

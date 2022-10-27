@@ -16,7 +16,7 @@ return [
     'default' => env('FILESYSTEM_DRIVER', 'local'),
     
     //ruta por defecto para las fotos de las motos
-    'anunciosImageDir' => 'img/anuncios',
+    'anunciosImageDir' => 'images/anuncios',
 
     /*
     |--------------------------------------------------------------------------
@@ -35,7 +35,7 @@ return [
     //configuración del almacenamiento local
         'local' => [
             'driver' => 'local',
-            'root' => public_path('img/anuncios/'),
+            'root' => public_path('images/anuncios/'),
         ],
 
         'public' => [

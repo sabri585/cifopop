@@ -45,9 +45,9 @@
         			<li class="nav-item mr-2">
         				<a class="nav-link {{$pagina=='admin.deleted.anuncios'? 'active':''}}" href="{{route('admin.deleted.anuncios')}}">Anuncios borrados</a>
         			</li>
-        			<li class="nav-item mr-2">
+        			{{-- <li class="nav-item mr-2">
         				<a class="nav-link {{$pagina=='admin.locked.users'? 'active':''}}" href="{{route('admin.locked.users')}}">Usuarios bloqueados</a>
-        			</li>
+        			</li> --}}
     			@endif
         		@endauth
         		
@@ -105,7 +105,7 @@
         <!-- Parte Inferior -->
         @section('pie')
         <footer class="page-footer font-small p-4 bg-light">
-        	<p>Aplicación creada por <b>Añadir variable autor</b> y desarrollada haciendo uso de <b>Laravel</b> y <b>Bootstrap</b> para el proyecto de clase.</p>
+        	<p>Aplicación creada por {{ $autor }} y desarrollada haciendo uso de <b>Laravel</b> y <b>Bootstrap</b> para el proyecto de clase.</p>
         </footer>
         @show
     </body>
