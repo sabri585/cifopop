@@ -35,7 +35,7 @@ Route::delete('anuncios/purge', [AnuncioController::class, 'purge'])
     ->middleware('signed'); //para asignar firma a la URL
 
 //eliminación con soft deletes
-Route::delete('anuncios/{anuncio}', [AnuncioController::class, 'destroy'])
+Route::delete('anuncios', [AnuncioController::class, 'destroy'])
     ->name('anuncios.destroy');
 
 //restauración del anuncio
@@ -46,17 +46,17 @@ Route::get('/anuncios/{anuncio}/restore', [AnuncioController::class, 'restore'])
 Route::resource('anuncios', AnuncioController::class);
 
 //RUTA PARA LA CONFIRMACIÓN DE BORRADO CON SOFT DELETES
-Route::get('anuncios/{anuncio}/borrar', [AnuncioController::class, 'delete'])->name('anuncios.borrar');
+Route::get('anuncios/{anuncio}/delete', [AnuncioController::class, 'delete'])->name('anuncios.delete');
 
 //RUTA PARA LA CONFIRMACIÓN DE ELIMINACIÓN DEFINITIVA
-Route::get('anuncios/{anuncio}/eliminar', [AnuncioController::class, 'remove'])->name('anuncios.eliminar');
+Route::get('anuncios/{anuncio}/remove', [AnuncioController::class, 'remove'])->name('anuncios.remove');
 
 
 //CRUD DE OFERTAS
 Route::resource('ofertas', OfertaController::class);
 
 //RUTA PARA LA CONFIRMACIÓN DE ELIMINACIÓN
-Route::get('ofertas/{oferta}/borrar', [OfertaController::class, 'delete'])->name('ofertas.borrar');
+Route::get('ofertas/{oferta}/delete', [OfertaController::class, 'delete'])->name('ofertas.delete');
 
 
 //RUTAS PARA LA GESTIÓN DE USUARIOS

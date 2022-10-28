@@ -17,7 +17,7 @@
 				value="{{ $titulo ?? '' }}">
 				
 		<input name="descripcion" type="text" class="col form-control mr-2 mb-2"
-				placeholder="Descripcion" maxlength="16"
+				placeholder="Descripcion" maxlength="16" minlength="3"
 				value="{{ $descripcion ?? '' }}">
 				
 		<button type="submit" class="col btn btn-primary mr-2 mb-2">Buscar</button>
@@ -66,11 +66,10 @@
             				</a>
         				@endif
         				@if(Auth::user()->can('delete', $anuncio))
-        				<form method="POST" action="{{route('anuncios.destroy', $anuncio->id )}}">
-                			{{ csrf_field() }}
-                			<input name="_method" type="hidden" value="DELETE">
-                			<input type="image" alt="Eliminar" src="{{asset('images/buttons/delete.png')}}" height="20" width="20">
-                		</form>
+        				<a class="mx-2" href="{{route('anuncios.delete', $anuncio->id) }}">
+                			<img height="40" width="40" src="{{asset('images/buttons/delete.png')}}"
+                				alt="Borrar" title="Borrar">
+						</a>
         				@endif
     				@endauth
     			</td>

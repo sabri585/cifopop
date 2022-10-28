@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'name' => env('Cifopop, vende lo que ya no usas', 'Laravel'),
+    'name' => 'Cifopop, vende lo que ya no usas',
 
     /*
     |--------------------------------------------------------------------------

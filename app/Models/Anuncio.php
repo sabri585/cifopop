@@ -11,7 +11,7 @@ class Anuncio extends Model
     use HasFactory, SoftDeletes;
     
     //campos de la BDD en los que se permite la asignación masiva
-    protected $fillable = ['titulo', 'descripcion', 'precio', 'imagen'];
+    protected $fillable = ['titulo', 'descripcion', 'precio', 'imagen','user_id'];
     
     //retorna el usuario propietario del anuncio
     public function user(){

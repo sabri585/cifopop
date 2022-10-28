@@ -1,6 +1,6 @@
-@extends('layouts.app')
+@extends('layouts.master')
 
-@section('content')
+@section('contenido')
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
@@ -94,7 +94,49 @@
             	@endforelse
             </table>
         </div>
-       
-    </div>
+        <div>
+        @if(count($deletedAnuncios))
+            <h3 class="mt-4">Anuncios borrados</h3>
+            <table class="table table-striped table-bordered">
+        		<tr>
+            		<th>ID</th>
+            		<th>Imagen</th>
+            		<th>Título</th>
+            		<th>Descripción</th>
+            		<th>Precio</th>
+            		<th></th>
+            		<th></th>
+            	</tr>
+            	@foreach($deletedAnuncios as $anuncio)
+        		<tr>
+        			<td><b>#{{$anuncio->id}}</b></td>
+        			<td class="text-center" style="max-width: 80px">
+        				<img class="rounded" style="max-width: 80%"
+        						alt="Imagen de {{$anuncio->marca}} {{$anuncio->modelo}}"
+        						title="Imagen de {{$anuncio->marca}} {{$anuncio->modelo}}"
+        						src="{{ $anuncio->imagen?
+                								asset('/'.config('filesystems.anunciosImageDir')).'/'.$anuncio->imagen:
+                								asset('/'.config('filesystems.anunciosImageDir')).'/default.jpg'}}">
+        			</td>
+        			<td>{{$anuncio->titulo}}</td>
+        			<td>{{$anuncio->descripcion}}</td>
+        			<td>{{$anuncio->precio}}</td>
+        			<td class="text-center">
+            			<a href="{{route('anuncios.restore', $anuncio->id)}}">
+        					<button class="btn btn-success">Restaurar</button>
+        				</a>
+    				</td>
+    				<td>
+    					<a href="{{route('anuncios.remove', $anuncio->id)}}">
+        					<img height="40" width="40"  src="{{asset('images/buttons/delete.png')}}"
+        					alt="Borrar" title="Borrar">
+        				</a>
+    				</td>
+        		</tr>
+        		@endforeach
+            </table>
+        @endif
+    	</div>
+	</div>
 </div> 
 @endsection

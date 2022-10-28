@@ -4,6 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Anuncio;
+use App\Http\Requests\AnuncioRequest;
+use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Facades\File;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\URL;
 
 class AnuncioController extends Controller
 {
@@ -35,6 +41,35 @@ class AnuncioController extends Controller
         
         //carga la vista para el listado
         return view('anuncios.list', ['anuncios'=>$anuncios]);
+    }
+    
+    /**
+     * Método que busca un anuncio.
+     *
+     * @param string $titulo, string $descripcion
+     * @return  \Illuminate\Http\Response
+     */
+    public function search(Request $request){
+        //comprobar que llegan los parámetros
+        $request->validate([
+            'titulo' => 'required|string|min:3',
+            'descripcion' => 'string|min:3|nullable'
+        ]);
+        
+        //realiza la consulta
+        //tomar los valores que llegan para titulo y descripción
+        $titulo = $request->input('titulo','');
+        $descripcion = $request->input('descripcion','');
+        
+        /*recupera los resultados, añadimos titulo y descripcion al paginador
+         para que haga bien los enlaces y se mantenga el filtro al pasar de página*/
+        $anuncios = Anuncio::where('titulo','like',"%$titulo%")
+        ->where('descripcion','like',"%$descripcion%")
+        ->paginate(config('paginator.anuncios'))
+        ->appends(['titulo'=>$titulo,'descripcion'=>$descripcion]);
+        
+        //retorna la vista de lista con el filtro aplicado
+        return view('anuncios.list', ['anuncios'=>$anuncios, 'titulo'=>$titulo, 'descripcion'=>$descripcion]);
     }
 
     /**
@@ -73,10 +108,11 @@ class AnuncioController extends Controller
             
             //nos quedamos solo con el nombre del fichero para añadirlo a la BDD
             $datos['imagen'] = pathinfo($ruta, PATHINFO_BASENAME);
-            
+        }
+        
             //recupera el id del usuario identificado y guardarlo en user_id del anuncio
             $datos['user_id'] = $request->user()->id;
-            
+
             //creación y guardado del nuevo anuncio con todos los datos
             $anuncio = Anuncio::create($datos);
             
@@ -85,7 +121,7 @@ class AnuncioController extends Controller
             ->route('anuncios.show', $anuncio->id)
             ->with('success', "Anuncio $anuncio->titulo añadido satisfactoriamente")
             ->cookie('lastInsertID', $anuncio->id, 0); //adjuntamos una cookie
-        }
+        
     }
 
     /**
@@ -124,7 +160,7 @@ class AnuncioController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(AnuncioUpdateRequest $request, Anuncio $anuncio)
+    public function update(AnuncioRequest $request, Anuncio $anuncio)
     {
         //tomar los datos del formulario
         $datos = $request->only('titulo', 'descripcion', 'precio');
@@ -166,26 +202,46 @@ class AnuncioController extends Controller
     }
 
     /**
-     * Muestra el formulario de confirmación de borrado del anuncio.
+     * Muestra el formulario de confirmación de borrado del anuncio (soft deletes).
      *
      * @param  int  $id, Request $request
      * @return \Illuminate\Http\Response
      */
-    public function delete(Request $request, int $id)
+    public function delete(Request $request, Anuncio $anuncio)
+    {        
+        //autorización mediante policy
+         if ($request->user()->cant('delete', $anuncio)) {
+             abort(401, 'No puedes borrar un anuncio que no es tuyo');
+         }
+         
+        //recuerda la URL anterior para futuras redirecciones
+        Session::put('returnTo', URL::previous());
+        
+        //muestra la vista de confirmación de eliminación
+        return view('anuncios.delete', ['anuncio'=>$anuncio]);
+    }
+    
+    /**
+     * Muestra el formulario de confirmación de eliminación definitiva del anuncio.
+     *
+     * @param  int  $id, Request $request
+     * @return \Illuminate\Http\Response
+     */
+    public function remove(Request $request, int $id)
     {
         //recupera el anuncio a eliminar
         $anuncio = Anuncio::withTrashed()->find($id);
         
         //autorización mediante policy
-         if ($request->user()->cant('delete', $anuncio)) {
-             abort(401, 'No puedes borrar un anuncio que no es tuyo');
-         }
+        if ($request->user()->cant('delete', $anuncio)) {
+            abort(401, 'No puedes borrar un anuncio que no es tuyo');
+        }
         
         //recuerda la URL anterior para futuras redirecciones
         Session::put('returnTo', URL::previous());
         
         //muestra la vista de confirmación de eliminación
-        return view('anuncios.borrar', ['anuncio'=>$anuncio]);
+        return view('anuncios.remove', ['anuncio'=>$anuncio]);
     }
     
     /**
@@ -207,81 +263,7 @@ class AnuncioController extends Controller
         //redirige a la vista anterior
         return back()->with('success', "Anuncio $anuncio->titulo eliminado");
     }
-    
-    /**
-     * Método que busca un anuncio.
-     *
-     * @param string $titulo, string $descripcion
-     * @return  \Illuminate\Http\Response
-     */
-    public function search(Request $request){
-        //comprobar que llegan los parámetros
-        $request->validate([
-            'titulo' => 'required|string|min:3',
-            'descripcion' => 'required|string|min:3'
-        ]);
         
-        //realiza la consulta
-        //tomar los valores que llegan para titulo y descripción
-        $titulo = $request->input('titulo','');
-        $descripcion = $request->input('descripcion','');
-        
-        /*recupera los resultados, añadimos titulo y descripcion al paginador
-         para que haga bien los enlaces y se mantenga el filtro al pasar de página*/
-        $anuncios = Anuncio::where('titulo','like',"%$titulo%")
-        ->where('descripcion','like',"%$descripcion%")
-        ->paginate(config('paginator.anuncios'))
-        ->appends(['titulo'=>$titulo,'descripcion'=>$descripcion]);
-        
-        //retorna la vista de lista con el filtro aplicado
-        return view('anuncios.list', ['anuncios'=>$anuncios, 'titulo'=>$titulo, 'descripcion'=>$descripcion]);
-    }
-    
-    /**
-     * Método que recupera el anuncio borrado.
-     *
-     * @param id, Request
-     * @return  Anuncio
-     */
-    public function restore(Request $request, int $id){
-        
-        //recupera el anuncio borrado
-        $anuncio = Bike::withTrashed()->find($id);
-        
-         //comprobación de permisos
-         if ($request->user()->cant('restore', $anuncio)) {
-            throw new AuthorizationException('No tienes permiso');
-         }
-
-        //restaura el anuncio
-        $anuncio->restore();
-        
-        return back()->with('success', "Anuncio $anuncio->titulo restaurado satisfactoriamente.");
-    }
-    
-    /**
-     * Muestra el formulario de confirmación de borrado definitivo del anuncio.
-     *
-     * @param  int  $id, Request $request
-     * @return \Illuminate\Http\Response
-     */
-    public function remove(Request $request, int $id)
-    {
-        //recupera el anuncio a eliminar
-        $anuncio = Anuncio::withTrashed()->find($id);
-        
-        //autorización mediante policy
-        if ($request->user()->cant('delete', $anuncio)) {
-             abort(401, 'No puedes borrar un anuncio que no es tuyo');
-        }
-            
-        //recuerda la URL anterior para futuras redirecciones
-        Session::put('returnTo', URL::previous());
-        
-        //muestra la vista de confirmación de eliminación
-        return view('anuncios.eliminar', ['anuncio'=>$anuncio]);
-    }
-    
     /**
      * Método que elimina el anuncio definitivamente.
      *
@@ -314,5 +296,27 @@ class AnuncioController extends Controller
         
         //redirección
         return $redirect->with('success', "Anuncio $anuncio->titulo eliminado");
+    }
+    
+    /**
+     * Método que recupera el anuncio borrado.
+     *
+     * @param id, Request
+     * @return  Anuncio
+     */
+    public function restore(Request $request, int $id){
+        
+        //recupera el anuncio borrado
+        $anuncio = Anuncio::withTrashed()->find($id);
+        
+        //comprobación de permisos
+        if ($request->user()->cant('restore', $anuncio)) {
+            throw new AuthorizationException('No tienes permiso');
+        }
+        
+        //restaura el anuncio
+        $anuncio->restore();
+        
+        return back()->with('success', "Anuncio $anuncio->titulo restaurado satisfactoriamente.");
     }
 }
