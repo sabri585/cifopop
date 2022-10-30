@@ -6,7 +6,9 @@
 	<div class="row">
 		<div class="col-6 text-start">{{ $anuncios->links() }}</div>
 		@auth
-		<div class="col-6 text-end"><p>Nuevo anuncio <a href="{{route('anuncios.create')}}" class="btn btn-success ml-2">+</a></p></div>
+			@if(!Auth::user()->hasRole('bloqueado', 'editor', 'administrador'))
+				<div class="col-6 text-end"><p>Nuevo anuncio <a href="{{route('anuncios.create')}}" class="btn btn-success ml-2">+</a></p></div>
+			@endif
 		@endauth
 	</div>
 	
@@ -59,17 +61,19 @@
     					alt="Ver detalles" title="Ver detalles">
     				</a>
     				@auth
-    					@if(Auth::user()->can('update', $anuncio))
-            				<a href="{{route('anuncios.edit', $anuncio->id)}}">
-            					<img height="20" width="20"  src="{{asset('images/buttons/update.png')}}"
-            					alt="Modificar" title="Modificar">
-            				</a>
-        				@endif
-        				@if(Auth::user()->can('delete', $anuncio))
-        				<a class="mx-2" href="{{route('anuncios.delete', $anuncio->id) }}">
-                			<img height="40" width="40" src="{{asset('images/buttons/delete.png')}}"
-                				alt="Borrar" title="Borrar">
-						</a>
+    					@if(!Auth::user()->hasRole('bloqueado'))
+        					@if(Auth::user()->can('update', $anuncio))
+                				<a href="{{route('anuncios.edit', $anuncio->id)}}">
+                					<img height="20" width="20"  src="{{asset('images/buttons/update.png')}}"
+                					alt="Modificar" title="Modificar">
+                				</a>
+            				@endif
+            				@if(Auth::user()->can('delete', $anuncio))
+            				<a class="mx-2" href="{{route('anuncios.delete', $anuncio->id)}}">
+                    			<img height="20" width="20" src="{{asset('images/buttons/delete.png')}}"
+                    				alt="Borrar" title="Borrar">
+    						</a>
+            				@endif
         				@endif
     				@endauth
     			</td>

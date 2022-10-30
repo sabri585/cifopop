@@ -9,14 +9,14 @@
 		<div class="form-group row">
 			<label for="inputTitulo" class="col-sm-2 col-form-label">Titulo</label>
 			<input name="titulo" type="text" class="up form-control col-sm-10"
-			id="inputTitulo" placeholder="Titulo" maxlength="255"  minlength="3" required
+			id="inputTitulo" placeholder="Titulo" maxlength="255" required
 			value="{{old('titulo')}}">
 		</div>
 		
 		<div class="form-group row"> 
 			<label for="inputDescripcion" class="col-sm-2 col-form-label">Descripción</label>
-			<textarea style="resize:none;" name="descripcion" class="up form-control col-sm-4"
-			id="inputDescripcion" required value="{{old('descripcion')}}"></textarea>
+			<input name="descripcion" class="up form-control col-sm-4"
+			id="inputDescripcion" required value="{{old('descripcion')}}">
 		</div>
 		
 		<div class="form-group row">

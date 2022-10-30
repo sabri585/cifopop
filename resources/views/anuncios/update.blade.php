@@ -17,7 +17,7 @@
 		
 		<div class="form-group row">
 			<label for="inputDescripcion" class="col-sm-2 col-form-label">Descripcion</label>
-			 <textarea style="resize:none;" id="inputDescripcion" required placeholder="{{$anuncio->descripcion}}" class="up form-control col-sm-4" name="descripcion" rows="4" cols="50"></textarea>
+			 <input id="inputDescripcion" required value="{{$anuncio->descripcion}}" class="up form-control col-sm-4" name="descripcion">
 		</div>
 		
 		<div class="form-group row">
@@ -53,11 +53,11 @@
 	<div class="text-end my-3">
 		<div class="btn-group mx-2">
 			<a class="mx-2" href="{{route('anuncios.show', $anuncio->id) }}">
-				<img height="40" width="40" src="{{asset('images/buttons/show.png')}}"
+				<img height="20" width="20" src="{{asset('images/buttons/show.png')}}"
 					alt="Detalles" title="Detalles">
 			</a>
 			<a class="mx-2" href="{{route('anuncios.delete', $anuncio->id) }}">
-				<img height="40" width="40" src="{{asset('images/buttons/delete.png')}}"
+				<img height="20" width="20" src="{{asset('images/buttons/delete.png')}}"
 					alt="Borrar" title="Borrar">
 			</a>
 		</div>

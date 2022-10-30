@@ -69,6 +69,18 @@ class AnuncioPolicy
     }
     
     /**
+     * Determine whether the user can remove the model.
+     *
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\Anuncio $anuncio
+     * @return \Illuminate\Auth\Access\Response|bool
+     */
+    public function remove(User $user, Anuncio $anuncio)
+    {
+        return $user->isOwner($anuncio) || $user->hasRole(['administrador', 'editor']);
+    }
+    
+    /**
      * Determine whether the user can restore the model.
      *
      * @param  \App\Models\User  $user

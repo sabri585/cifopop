@@ -17,6 +17,9 @@ return [
     
     //ruta por defecto para las fotos de las motos
     'anunciosImageDir' => 'images/anuncios',
+    
+    //ruta por defecto para las fotos de los usuarios
+    'usersImageDir' => 'images/users',
 
     /*
     |--------------------------------------------------------------------------

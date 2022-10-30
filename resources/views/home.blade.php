@@ -14,7 +14,7 @@
                     </form>
             	</div>
         	@endif
-        	
+        	        	
             <div class="card">
                 <div class="card-header">{{ __('Hello') }} {{ Auth::user()->name }}</div>
 
@@ -26,7 +26,12 @@
                     @endif
 
                     <p>Bienvenido/a a tu espacio personal.</p>
-                    
+                    @if (Auth::user()->hasRole('bloqueado'))
+                        <div class="alert alert-danger"> 
+                        	Has sido bloqueado y ya no puedes realizar ninguna operación. Por favor,
+                        	ponte en <a href="{{ route('contacto') }}"><b>contacto</b></a> con nosotros.
+                    	</div>
+                	@endif
                    
                     <div>
                     	<b>Tus Datos:</b><br>
@@ -39,104 +44,101 @@
                 </div>
             </div>
         </div>
-        <div class="mt-4">
-            <table class="table table-striped table-bordered">
-            	@forelse($anuncios as $anuncio)
-            		
-            		@if($loop->first)
-                		<tr>
-                    		<th>ID</th>
-                    		<th>Imagen</th>
-                    		<th>Título</th>
-                    		<th>Descripción</th>
-                    		<th>Precio</th>
-                    		<th>Operaciones</th>
-                    	</tr>
-                	@endif
-                		<tr>
-                			<td>{{$anuncio->id}}</td>
-                			<td class="text-center" style="max-width: 80px">
-                				<img class="rounded" style="max-width: 80%"
-                						alt="Imagen de {{$anuncio->titulo}}"
-                						title="Imagen de {{$anuncio->titulo}}"
-                						src="{{ $anuncio->imagen?
-                								asset('/'.config('filesystems.anunciosImageDir')).'/'.$anuncio->imagen:
-                								asset('/'.config('filesystems.anunciosImageDir')).'/default.jpg'}}">
-                			</td>
-                			<td>{{$anuncio->titulo}}</td>
-                			<td>{{$anuncio->descripcion}}</td>
-                			<td>{{$anuncio->precio}}</td>
-                			<td>
-                    			<a href="{{route('anuncios.show', $anuncio->id)}}">
-                					<img height="20" width="20"  src="{{asset('images/buttons/show.png')}}"
-                					alt="Ver detalles" title="Ver detalles">
-                				</a>
-        						<a href="{{route('anuncios.edit', $anuncio->id)}}">
-                					<img height="20" width="20"  src="{{asset('images/buttons/update.png')}}"
-                					alt="Modificar" title="Modificar">
-                				</a>
-                				{{-- <a href="{{route('anuncios.borrar', $anuncio->id)}}">
-                					<img height="20" width="20"  src="{{asset('images/buttons/delete.png')}}"
-                					alt="Borrar" title="Borrar">
-                				</a> --}}
-                				<form method="POST" action="{{route('anuncios.destroy', $anuncio->id )}}">
-                        			{{ csrf_field() }}
-                        			<input name="_method" type="hidden" value="DELETE">
-                        			<input type="image" alt="Eliminar" src="{{asset('images/buttons/delete.png')}}" height="20" width="20">
-                        		</form>
-            				</td>
-                		</tr>
-                    	@if($loop->last)
-                    	 	<tr><td colspan="7">Mostrando {{sizeof($anuncios)}} de {{$anuncios->total()}}.</td></tr>
+        @if (!Auth::user()->hasRole('administrador', 'editor'))
+            <div class="mt-4">
+                <table class="table table-striped table-bordered">
+                	@forelse($anuncios as $anuncio)
+                	
+                		@if($loop->first)
+                    		<tr>
+                        		<th>ID</th>
+                        		<th>Imagen</th>
+                        		<th>Título</th>
+                        		<th>Descripción</th>
+                        		<th>Precio</th>
+                        		<th>Operaciones</th>
+                        	</tr>
                     	@endif
-            	@empty
-            		<tr><td colspan="4">No hay resultados que mostrar.</td></tr>
-            	@endforelse
-            </table>
-        </div>
-        <div>
-        @if(count($deletedAnuncios))
-            <h3 class="mt-4">Anuncios borrados</h3>
-            <table class="table table-striped table-bordered">
-        		<tr>
-            		<th>ID</th>
-            		<th>Imagen</th>
-            		<th>Título</th>
-            		<th>Descripción</th>
-            		<th>Precio</th>
-            		<th></th>
-            		<th></th>
-            	</tr>
-            	@foreach($deletedAnuncios as $anuncio)
-        		<tr>
-        			<td><b>#{{$anuncio->id}}</b></td>
-        			<td class="text-center" style="max-width: 80px">
-        				<img class="rounded" style="max-width: 80%"
-        						alt="Imagen de {{$anuncio->marca}} {{$anuncio->modelo}}"
-        						title="Imagen de {{$anuncio->marca}} {{$anuncio->modelo}}"
-        						src="{{ $anuncio->imagen?
-                								asset('/'.config('filesystems.anunciosImageDir')).'/'.$anuncio->imagen:
-                								asset('/'.config('filesystems.anunciosImageDir')).'/default.jpg'}}">
-        			</td>
-        			<td>{{$anuncio->titulo}}</td>
-        			<td>{{$anuncio->descripcion}}</td>
-        			<td>{{$anuncio->precio}}</td>
-        			<td class="text-center">
-            			<a href="{{route('anuncios.restore', $anuncio->id)}}">
-        					<button class="btn btn-success">Restaurar</button>
-        				</a>
-    				</td>
-    				<td>
-    					<a href="{{route('anuncios.remove', $anuncio->id)}}">
-        					<img height="40" width="40"  src="{{asset('images/buttons/delete.png')}}"
-        					alt="Borrar" title="Borrar">
-        				</a>
-    				</td>
-        		</tr>
-        		@endforeach
-            </table>
-        @endif
-    	</div>
+                    		<tr>
+                    			<td>{{$anuncio->id}}</td>
+                    			<td class="text-center" style="max-width: 80px">
+                    				<img class="rounded" style="max-width: 80%"
+                    						alt="Imagen de {{$anuncio->titulo}}"
+                    						title="Imagen de {{$anuncio->titulo}}"
+                    						src="{{ $anuncio->imagen?
+                    								asset('/'.config('filesystems.anunciosImageDir')).'/'.$anuncio->imagen:
+                    								asset('/'.config('filesystems.anunciosImageDir')).'/default.jpg'}}">
+                    			</td>
+                    			<td>{{$anuncio->titulo}}</td>
+                    			<td>{{$anuncio->descripcion}}</td>
+                    			<td>{{$anuncio->precio}}</td>
+                    			<td>
+                        			<a href="{{route('anuncios.show', $anuncio->id)}}">
+                    					<img height="20" width="20"  src="{{asset('images/buttons/show.png')}}"
+                    					alt="Ver detalles" title="Ver detalles">
+                    				</a>
+            						<a href="{{route('anuncios.edit', $anuncio->id)}}">
+                    					<img height="20" width="20"  src="{{asset('images/buttons/update.png')}}"
+                    					alt="Modificar" title="Modificar">
+                    				</a>
+                    				<a href="{{route('anuncios.remove', $anuncio->id)}}">
+                    					<img height="20" width="20"  src="{{asset('images/buttons/delete.png')}}"
+                    					alt="Borrar" title="Borrar">
+                    				</a>
+                				</td>
+                    		</tr>
+                        	@if($loop->last)
+                        	 	<tr><td colspan="7">Mostrando {{sizeof($anuncios)}} de {{$anuncios->total()}}.</td></tr>
+                        	@endif
+                	@empty
+                		<tr><td colspan="4">No hay resultados que mostrar.</td></tr>
+                	@endforelse
+                </table>
+            </div>
+            <div>
+            @if(count($deletedAnuncios))
+                <h3 class="mt-4">Anuncios borrados</h3>
+                <table class="table table-striped table-bordered">
+            		<tr>
+                		<th>ID</th>
+                		<th>Imagen</th>
+                		<th>Título</th>
+                		<th>Descripción</th>
+                		<th>Precio</th>
+                		<th></th>
+                		<th></th>
+                	</tr>
+                	@foreach($deletedAnuncios as $anuncio)
+            		<tr>
+            			<td><b>#{{$anuncio->id}}</b></td>
+            			<td class="text-center" style="max-width: 80px">
+            				<img class="rounded" style="max-width: 80%"
+            						alt="Imagen de {{$anuncio->marca}} {{$anuncio->modelo}}"
+            						title="Imagen de {{$anuncio->marca}} {{$anuncio->modelo}}"
+            						src="{{ $anuncio->imagen?
+                    								asset('/'.config('filesystems.anunciosImageDir')).'/'.$anuncio->imagen:
+                    								asset('/'.config('filesystems.anunciosImageDir')).'/default.jpg'}}">
+            			</td>
+            			<td>{{$anuncio->titulo}}</td>
+            			<td>{{$anuncio->descripcion}}</td>
+            			<td>{{$anuncio->precio}}</td>
+            			<td class="text-center">
+                			<a href="{{route('anuncios.restore', $anuncio->id)}}">
+            					<button class="btn btn-success">Restaurar</button>
+            				</a>
+        				</td>
+        				<td>
+        					<a href="{{route('anuncios.remove', $anuncio->id)}}">
+            					<img height="40" width="40"  src="{{asset('images/buttons/delete.png')}}"
+            					alt="Borrar" title="Borrar">
+            				</a>
+        				</td>
+            		</tr>
+            		@endforeach
+                </table>
+            @endif
+        	</div>
+    	@endif
 	</div>
 </div> 
 @endsection

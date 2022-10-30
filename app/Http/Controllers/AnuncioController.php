@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Anuncio;
 use App\Http\Requests\AnuncioRequest;
+use App\Http\Requests\AnuncioUpdateRequest;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\File;
 use Illuminate\Auth\Access\AuthorizationException;
@@ -144,9 +145,9 @@ class AnuncioController extends Controller
      */
     public function edit(Request $request, Anuncio $anuncio)
     {
-        ////autorización mediante policy
+        //autorización mediante policy
         if ($request->user()->cant('update', $anuncio)) {
-             abort(401, 'No puedes actualizar una moto que no es tuya');
+             abort(401, 'No puedes actualizar un anuncio que no es tuyo');
          }
         
         //carga la vista con el formulario para modificar el anuncio
@@ -160,8 +161,13 @@ class AnuncioController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(AnuncioRequest $request, Anuncio $anuncio)
+    public function update(AnuncioUpdateRequest $request, Anuncio $anuncio)
     {
+        //autorización mediante policy
+        if ($request->user()->cant('update', $anuncio)) {
+            abort(401, 'No puedes actualizar un anuncio que no es tuyo');
+        }
+        
         //tomar los datos del formulario
         $datos = $request->only('titulo', 'descripcion', 'precio');
         
@@ -222,6 +228,34 @@ class AnuncioController extends Controller
     }
     
     /**
+     * Remove the specified resource from storage (soft deletes).
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy(Request $request, Anuncio $anuncio)
+    {
+        //autorización mediante policy
+         if ($request->user()->cant('delete', $anuncio)) {
+             abort(401, 'No puedes borrar un anuncio que no es tuyo');
+         }
+                
+        //soft delete
+        $anuncio->delete();
+        
+        //comprobamos si hay que retornar a algún sitio concreto
+        $redirect = Session::has('returnTo') ?
+        redirect(Session::get('returnTo')) : //por URL
+        redirect()->route('anuncios.index'); //por nombre de ruta TODO: no funciona con show
+        
+        //borramos la variable de sesión si la hubiera
+        Session::remove('returnTo');
+        
+        //redirige a la vista anterior
+        return $redirect->with('success', "Anuncio $anuncio->titulo eliminado");
+    }
+    
+    /**
      * Muestra el formulario de confirmación de eliminación definitiva del anuncio.
      *
      * @param  int  $id, Request $request
@@ -242,26 +276,6 @@ class AnuncioController extends Controller
         
         //muestra la vista de confirmación de eliminación
         return view('anuncios.remove', ['anuncio'=>$anuncio]);
-    }
-    
-    /**
-     * Remove the specified resource from storage (soft deletes).
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Request $request, Anuncio $anuncio)
-    {
-        //autorización mediante policy
-         if ($request->user()->cant('delete', $anuncio)) {
-             abort(401, 'No puedes borrar un anuncio que no es tuyo');
-         }
-        
-        //soft delete
-        $anuncio->delete();
-        
-        //redirige a la vista anterior
-        return back()->with('success', "Anuncio $anuncio->titulo eliminado");
     }
         
     /**
@@ -286,10 +300,9 @@ class AnuncioController extends Controller
         }
         
         //comprobamos si hay que retornar a algún sitio concreto
-        //en caso contrario iremos a la lista de motos (ruta por defecto)
         $redirect = Session::has('returnTo') ?
         redirect(Session::get('returnTo')) : //por URL
-        redirect()->route('bikes.index'); //por nombre de ruta
+        redirect()->route('anuncios.index'); //por nombre de ruta
         
         //borramos la variable de sesión si la hubiera
         Session::remove('returnTo');

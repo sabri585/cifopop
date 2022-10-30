@@ -30,25 +30,37 @@
         		<li class="nav-item mr-2">
         			<a class="nav-link {{$pagina=='portada'? 'active':''}}" href="{{route('portada')}}">Inicio</a>
         		</li>
+        		
         		<li class="nav-item mr-2">
-						<a class="nav-link {{$pagina=='anuncios.index' || $pagina=='anuncios.search'? 'active':''}}" href="{{route('anuncios.index')}}">Tienda</a>
+        			<a class="nav-link {{$pagina=='anuncios.index'? 'active':''}}" href="{{route('anuncios.index')}}">Tienda</a>
         		</li>
+        		
         		<li class="nav-item mr-2">
         			<a class="nav-link {{$pagina=='contacto'? 'active':''}}" href="{{route('contacto')}}">Contacto</a>
         		</li>
-        		@auth {{-- Solo para usuarios logueados --}}
-        		<li class="nav-item mr-2">
-						<a class="nav-link {{$pagina=='anuncios.create'? 'active':''}}" href="{{route('anuncios.create')}}">Nuevo anuncio</a>
-        		</li>
+        		@auth
+        			@if(!Auth::user()->hasRole('bloqueado', 'administrador', 'editor'))
+                		<li class="nav-item mr-2">
+        						<a class="nav-link {{$pagina=='anuncios.create'? 'active':''}}" href="{{route('anuncios.create')}}">Nuevo anuncio</a>
+                		</li>
+            		@endif
         		
-        		 @if(Auth::user()->hasRole('administrador', 'editor'))
+            		@if(Auth::user()->hasRole('administrador','editor'))
+            			<li class="nav-item mr-2">
+            				<a class="nav-link {{$pagina=='employed.deleted.anuncios'? 'active':''}}" href="{{route('employed.deleted.anuncios')}}">Anuncios borrados</a>
+            			</li>
+        			@endif
+    			
+    				@if(Auth::user()->hasRole('administrador'))
         			<li class="nav-item mr-2">
-        				<a class="nav-link {{$pagina=='admin.deleted.anuncios'? 'active':''}}" href="{{route('admin.deleted.anuncios')}}">Anuncios borrados</a>
-        			</li>
-        			{{-- <li class="nav-item mr-2">
         				<a class="nav-link {{$pagina=='admin.locked.users'? 'active':''}}" href="{{route('admin.locked.users')}}">Usuarios bloqueados</a>
-        			</li> --}}
-    			@endif
+        			</li>
+        			
+        			<li class="nav-item mr-2">
+        				<a class="nav-link {{$pagina=='admin.users' || $pagina=='admin.users.search' ? 'active':''}}"
+        					href="{{route('admin.users')}}">Gestión de usuarios</a>
+        			</li>
+        			@endif
         		@endauth
         		
         		@guest
@@ -97,7 +109,6 @@
         	<div class="btn-group" role="group" label="Links">
         	@section('enlaces')
         		<a href="{{url()->previous()}}" class="btn btn-primary m-2">Atrás</a>
-        		<a href="{{route('portada')}}" class="btn btn-primary m-2">Inicio</a>
         	</div>
         	@show
         </main>

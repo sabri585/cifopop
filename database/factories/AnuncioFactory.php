@@ -30,7 +30,7 @@ class AnuncioFactory extends Factory
                         'Silla',
                         'Mesa',
                         'Nintendo',
-                        'PalyStation',
+                        'PlayStation',
                         'Bicicleta',
                         'Iphone',
                         'reloj'

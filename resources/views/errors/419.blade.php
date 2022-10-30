@@ -1,28 +1,18 @@
 @extends('layouts.master')
- 	@php
- 	 	include 'css/errores.css';
-	@endphp
-@section('titulo','Error 419')
 @section('contenido')
+	<head>
+		<link rel="stylesheet" type="text/css" href="{{asset('css/errores.css')}}">
+	</head>
 	<div>
-		<h1>419 Página caducada</h1>
-        <p class="zoom-area title mb-5" style=font-size: 3rem">
+		<h1 class="error-container" style="font-size: 3rem">419 Página caducada</h1>
+        <p class="zoom-area title mb-5" style="font-size: 3rem">
         	Tiempo de espera agotado, por favor inténtelo más tarde.
     	</p>
-        <div class="zoom-area title mb-5" style=font-size: 2rem">
+        <div class="zoom-area title mb-5" style="font-size: 2rem">
         	{{ $exception->getMessage() }}
         </div>
         <section class="error-container">
-            <span class="four"><span class="screen-reader-text">4</span></span>
-            <span class="zero"><span class="screen-reader-text">1</span></span>
-            <span class="four"><span class="screen-reader-text">9</span></span>
+            <p style="font-size: 10rem">419</p>
         </section>
 	</div>
-@endsection
-
-@section('enlaces')
-	@parent
-	 <div class="link-container">
-    	<a href="{{route(anuncios.index')}}" class="more-link">Inicio</a>
-    </div>
 @endsection

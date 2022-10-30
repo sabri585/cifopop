@@ -49,6 +49,12 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany('App\Models\Anuncio');
     }
     
+    //método que recupera todas las ofertas relacionadas con el usuario
+    //como la relación es 1 a N, usaremos el método hasMany()
+    public function ofertas(){
+        return $this->hasMany('App\Models\Oferta');
+    }
+    
     //Método que recupera los roles de un usuario
     public function roles(){
         return $this->belongsToMany('App\Models\Role');
@@ -77,5 +83,10 @@ class User extends Authenticatable implements MustVerifyEmail
     //método para saber si un usuario es propietario de un anuncio
     public function isOwner(Anuncio $anuncio):bool{
         return $this->id == $anuncio->user_id;
+    }
+    
+    //método para saber si un usuario es propietario de una oferta
+    public function isPropietario(Oferta $oferta):bool{
+        return $this->id == $oferta->user_id;
     }
 }

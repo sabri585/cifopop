@@ -37,6 +37,7 @@ class Kernel extends HttpKernel
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
             \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            \App\Http\Middleware\IsLocked::class,
         ],
 
         'api' => [
@@ -54,6 +55,10 @@ class Kernel extends HttpKernel
      */
     protected $routeMiddleware = [
         'auth' => \App\Http\Middleware\Authenticate::class,
+//         'is_locked' => \App\Http\Middleware\IsLocked::class,
+        'is_admin' => \App\Http\Middleware\IsAdmin::class,
+        'is_employed' => \App\Http\Middleware\IsEmployed::class,
+        'is_not_employed' => \App\Http\Middleware\IsNotEmployed::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
         'cache.headers' => \Illuminate\Http\Middleware\SetCacheHeaders::class,
         'can' => \Illuminate\Auth\Middleware\Authorize::class,
