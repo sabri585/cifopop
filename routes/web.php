@@ -32,10 +32,10 @@ Route::get('/', [WelcomeController::class, 'index'])->name('portada');
 
 
 //CRUD DE ANUNCIOS
+Route::resource('/anuncios', AnuncioController::class);
 
 //lista de anuncios
-Route::get('/anuncios', [AnuncioController::class, 'index'])
-->name('anuncios.index');
+// Route::get('/anuncios', [AnuncioController::class, 'index'])->name('anuncios.index');
   
 //PARA BUSCAR anuncios
 Route::match(['GET','POST'], '/anuncios/search',[AnuncioController::class, 'search'])
@@ -43,15 +43,14 @@ Route::match(['GET','POST'], '/anuncios/search',[AnuncioController::class, 'sear
 
 //grupo de rutas a las que le aplicaremos un middleware
 // Route::group(['auth', 'middleware'=>IsLocked::class], function(){
-    Route::group( function(){
     
-    //formulario de creación de anuncios
-    Route::get('/anuncios/create', [AnuncioController::class, 'create'])
-    ->name('anuncios.create')->middleware('auth','is_not_employed');
+//     //formulario de creación de anuncios
+//     Route::get('/anuncios/create', [AnuncioController::class, 'create'])
+//     ->name('anuncios.create')->middleware('auth','is_not_employed');
     
-    //guardar el anuncio
-    Route::get('/anuncios', [AnuncioController::class, 'store'])
-    ->name('anuncios.store');
+//     //guardar el anuncio
+//     Route::get('/anuncios', [AnuncioController::class, 'store'])
+//     ->name('anuncios.store');
     
     //eliminación definitiva del anuncio
     //URL firmada para más seguridad
@@ -65,8 +64,8 @@ Route::match(['GET','POST'], '/anuncios/search',[AnuncioController::class, 'sear
     
     
     //formulario de edición
-    Route::get('/anuncios/{anuncio}/edit', [AnuncioController::class, 'edit'])
-    ->name('anuncios.edit');
+//     Route::get('/anuncios/{anuncio}/edit', [AnuncioController::class, 'edit'])
+//     ->name('anuncios.edit');
     
     //restauración del anuncio
     Route::get('/anuncios/{anuncio}/restore', [AnuncioController::class, 'restore'])
@@ -81,20 +80,30 @@ Route::match(['GET','POST'], '/anuncios/search',[AnuncioController::class, 'sear
     ->name('anuncios.remove');
     
     //actualizar anuncio
-    Route::match(['PUT','PATCH'], '/anuncios/{anuncio}',[AnuncioController::class, 'update'])
-    ->name('anuncios.update');
-});
+//     Route::match(['PUT','PATCH'], '/anuncios/{anuncio}',[AnuncioController::class, 'update'])
+//     ->name('anuncios.update');
+// });
 
 //detalles del anuncio
-Route::get('anuncios/{anuncio}', [AnuncioController::class, 'show'])
-    ->name('anuncios.show');
+// Route::get('anuncios/{anuncio}', [AnuncioController::class, 'show'])
+//     ->name('anuncios.show');
 
     
     
 //CRUD DE OFERTAS
 
-//Rutas??
+//ver oferta 
+//TODO: es correcto ponerle ruta si va en la vista de anuncio??
+Route::get('oferta/{oferta}', [OfertaController::class, 'show'])
+    ->name('ofertas.show');
+    
+//guardar la oferta
+Route::post('/oferta/store', [OfertaController::class, 'store'])
+    ->name('ofertas.store');
 
+//eliminar oferta
+Route::delete('/oferta/destroy', [OfertaController::class, 'destroy'])
+    ->name('ofertas.destroy');
 
 //RUTAS PARA LA GESTIÓN DE USUARIOS
 Auth::routes();

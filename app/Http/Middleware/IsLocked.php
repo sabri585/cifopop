@@ -10,7 +10,7 @@ class IsLocked {
     public function handle(Request $request, Closure $next) {
         
         //nombre de rutas permitidas para los usuarios bloqueados
-        $allowed = ['contacto', 'contacto.email', 'user.locked'];
+        $allowed = ['contacto', 'contacto.email', 'user.locked', 'logout'];
         
         //toma el usuario identificado y el nombre de la ruta
         $user = $request->user();

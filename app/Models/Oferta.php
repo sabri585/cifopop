@@ -12,8 +12,8 @@ class Oferta extends Model
     //campos de la BDD en los que se permite la asignación masiva
     protected $fillable = ['texto', 'fechaVigencia', 'importe', 'fechaAceptacion', 'fechaRechazo', 'anuncio_id', 'user_id'];
     
-    //retorna el usuario propietario de la oferta
-    public function user(){
+    //retorna el usuario propietario de la oferta    
+    public function propietary(){
         return $this->belongsTo('App\Models\User');
     }
 }

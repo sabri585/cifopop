@@ -60,7 +60,8 @@
     	</div>
     	@endif
     	
-    	@if (!Auth::user()->hasRole('bloqueado', 'administrador', 'editor'))
+    	{{-- Para crear ofertas --}}
+    	@if (!Auth::user()->hasRole('bloqueado', 'administrador', 'editor') or !Auth::user()->isOwner($anuncio))
         	<form class="my-2 border p-5" method="POST" action="{{route('ofertas.store')}}" enctype="multipart/form-data">
     		{{csrf_field()}}
         		<div class="card">
@@ -90,27 +91,32 @@
         		</div>
     		</form>
     	@endif
-    	{{-- Añadir permisos a la oferta solo para que el usuario que lo ha creado y el propietario lo pueda ver--}}
-    	 <table class="table table-striped table-bordered">
-        	@forelse($ofertas as $oferta)
-            	<tr>
-        			<td>Texto</td>
-        			<td>{{$oferta->texto}}</td>
-        		</tr>
-        		<tr>
-        			<td>Descripción</td>
-        			<td>{{$oferta->descripcion}}</td>
-        		</tr>
-        		<tr>
-        			<td>Importe</td>
-        			<td>{{$oferta->importe}}</td>
-        		</tr>
-        		<tr>
-        			<td>Propietario</td>
-        			<td>{{$oferta->user? $oferta->user->name : 'Sin propietario'}}</td>
-        		</tr>
-    		@endforelse
-		</table>
+    	
+    	{{-- Para ver las ofertas creadas --}}
+    	@if (!Auth::user()->hasRole('bloqueado'))
+        	 <table class="table table-striped table-bordered">
+            	@foreach($ofertas as $oferta)
+                	<tr>
+            			<td>Texto</td>
+            			<td>{{$oferta->texto}}</td>
+            		</tr>
+            		<tr>
+            			<td>Descripción</td>
+            			<td>{{$oferta->descripcion}}</td>
+            		</tr>
+            		<tr>
+            			<td>Importe</td>
+            			<td>{{$oferta->importe}}</td>
+            		</tr>
+            		<tr>
+            			<td>Propietario</td>
+            			<td>{{$oferta->user? $oferta->user->name : 'Sin propietario'}}</td>
+            		</tr>
+        		@endforeach
+    		</table>
+		@endif
+		
+		@if (Auth::user()->isPropietario($oferta))
 		<div class="text-center">
     		<a onclick='if(confirm("¿Estás seguro de que deseas eliminar la oferta?"))
     						this.nextElementSibling.submit();'>
@@ -121,7 +127,8 @@
     			<input name="_method" type="hidden" value="DELETE">
     			<input name="bike_id" type="hidden" value="{{ $bike->id }}">
     		</form>
-		</div>
+		</div> 
+		@endif
 	@endauth
 @endsection
 
