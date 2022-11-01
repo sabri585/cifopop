@@ -8,7 +8,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\OfertNotification;
 
-class SendCreatedOfertEmail
+class SendCreatedOfertaEmail
 {
     /**
      * Create the event listener.

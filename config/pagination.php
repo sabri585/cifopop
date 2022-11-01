@@ -4,5 +4,8 @@ return [
     'anuncios' => env('RESULTS_PER_PAGE', 10),
     
     //número de usuarios a mostrar en los listados
-    'users' => env('RESULTS_PER_PAGE', 10) 
+    'users' => env('RESULTS_PER_PAGE', 10),
+    
+    //número de usuarios a mostrar en los listados
+    'ofertas' => env('RESULTS_PER_PAGE', 10),
 ];

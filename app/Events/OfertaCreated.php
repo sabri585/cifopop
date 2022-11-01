@@ -12,7 +12,7 @@ use Illuminate\Queue\SerializesModels;
 use App\Models\Oferta;
 use App\Models\User;
 
-class OfertCreated
+class OfertaCreated
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
     

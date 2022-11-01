@@ -6,8 +6,8 @@ use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Event;
-use App\Events\OfertCreated;
-use App\Listener\SendCreatedOfertEmail;
+use App\Events\OfertaCreated;
+use App\Listener\SendCreatedOfertaEmail;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -21,7 +21,7 @@ class EventServiceProvider extends ServiceProvider
             SendEmailVerificationNotification::class,
         ],
         
-        OfertCreated::class => [
+        OfertaCreated::class => [
             SendCreatedOfertEmail::class,
         ],
     ];

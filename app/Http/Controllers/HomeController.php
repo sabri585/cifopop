@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
 {
@@ -29,7 +30,17 @@ class HomeController extends Controller
         //recuperar los anuncios borrados del usuario
         $deletedAnuncios = $request->user()->anuncios()->onlyTrashed()->get();
         
+        //recuperar todas las ofertas TODO: falta para el usuario en concreto
+        $ofertas = DB::table('ofertas')
+            ->join('anuncios', 'anuncios.id', '=', 'ofertas.anuncio_id')
+            ->join('users', 'users.id', '=', 'ofertas.user_id')
+            ->select('ofertas.*', 'users.name', 'users.email', 'anuncios.titulo')
+            ->get();
+        
+        //recuperar las ofertas que el usuario ha hecho a otros
+//         $ofertas = $request->user()->ofertas()->paginate(config('pagination.anuncios', 10));
+        
         //cargar la vista de home pasándole los anuncios
-        return view('home', ['anuncios' => $anuncios, 'deletedAnuncios' => $deletedAnuncios]);
+            return view('home', ['anuncios'=>$anuncios, 'deletedAnuncios'=>$deletedAnuncios, 'ofertas'=>$ofertas]);
     }
 }

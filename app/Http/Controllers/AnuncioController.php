@@ -239,7 +239,7 @@ class AnuncioController extends Controller
          if ($request->user()->cant('delete', $anuncio)) {
              abort(401, 'No puedes borrar un anuncio que no es tuyo');
          }
-                
+         
         //soft delete
         $anuncio->delete();
         

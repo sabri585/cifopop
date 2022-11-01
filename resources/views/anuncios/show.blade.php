@@ -21,6 +21,10 @@
 			<td>{{$anuncio->user? $anuncio->user->name : 'Sin propietario'}}</td>
 		</tr>
 		<tr>
+			<td>Población</td>
+			<td>{{$anuncio->user->poblacion }}</td>
+		</tr>
+		<tr>
 			<td>Precio</td>
 			<td>{{$anuncio->precio}}</td>
 		</tr>
@@ -41,7 +45,6 @@
 	</table>
 	
 	@auth
-    	@if(!Auth::user()->hasRole('bloqueado'))
         <div class="text-end my-3">
         	<div class="btn-group mx-2">
             	@if(Auth::user()->can('update', $anuncio))
@@ -58,10 +61,9 @@
     			@endif
     		</div>
     	</div>
-    	@endif
     	
     	{{-- Para crear ofertas --}}
-    	@if (!Auth::user()->hasRole('bloqueado', 'administrador', 'editor') or !Auth::user()->isOwner($anuncio))
+    	@if (!Auth::user()->hasRole('administrador', 'editor') || !Auth::user()->isOwner($anuncio))
         	<form class="my-2 border p-5" method="POST" action="{{route('ofertas.store')}}" enctype="multipart/form-data">
     		{{csrf_field()}}
         		<div class="card">
@@ -92,8 +94,7 @@
     		</form>
     	@endif
     	
-    	{{-- Para ver las ofertas creadas --}}
-    	@if (!Auth::user()->hasRole('bloqueado'))
+    	{{-- Para ver las ofertas creadas 
         	 <table class="table table-striped table-bordered">
             	@foreach($ofertas as $oferta)
                 	<tr>
@@ -114,7 +115,6 @@
             		</tr>
         		@endforeach
     		</table>
-		@endif
 		
 		@if (Auth::user()->isPropietario($oferta))
 		<div class="text-center">
@@ -128,7 +128,7 @@
     			<input name="bike_id" type="hidden" value="{{ $bike->id }}">
     		</form>
 		</div> 
-		@endif
+		@endif --}}
 	@endauth
 @endsection
 

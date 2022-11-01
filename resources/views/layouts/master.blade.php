@@ -39,7 +39,7 @@
         			<a class="nav-link {{$pagina=='contacto'? 'active':''}}" href="{{route('contacto')}}">Contacto</a>
         		</li>
         		@auth
-        			@if(!Auth::user()->hasRole('bloqueado', 'administrador', 'editor'))
+        			@if(!Auth::user()->hasRole('administrador', 'editor'))
                 		<li class="nav-item mr-2">
         						<a class="nav-link {{$pagina=='anuncios.create'? 'active':''}}" href="{{route('anuncios.create')}}">Nuevo anuncio</a>
                 		</li>

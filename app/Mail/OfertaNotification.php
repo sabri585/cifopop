@@ -8,7 +8,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use App\Models\Oferta;
 
-class OfertNotification extends Mailable
+class OfertaNotification extends Mailable
 {
     use Queueable, SerializesModels;
     
