@@ -15,33 +15,18 @@ class OfertaController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(OfertaRequest $request)
+    public function store(OfertaRequest $request, Anuncio $anuncio)
     {
         //recuperar datos del formulario
-        $datos = $request->only(['texto', 'fechaVigencia', 'importe']);
+        $datos = $request->only(['texto', 'fechaVigencia', 'importe', 'anuncio_id']);
         
         //recupera el id del usuario identificado y guardarlo en user_id de la oferta
         $datos['user_id'] = $request->user()->id;
-        
-        //recupera el id del anuncio que se está mirando y guardarlo en anuncio_id de la oferta
-        $datos['anuncio_id'] = $request->user()->id;
         
         //creación y guardado de la nueva oferta con todos los datos
         $oferta = Oferta::create($datos);
         
         return back()->with('success', "Oferta creada satisfactoriamente.");
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Oferta $oferta)
-    {
-        //pasamos el anuncio a la vista
-        return view('anuncios.show', ['oferta'=>$oferta]);
     }
 
 

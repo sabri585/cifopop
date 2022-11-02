@@ -55,6 +55,7 @@
                     		<th>Título</th>
                     		<th>Descripción</th>
                     		<th>Precio</th>
+                    		<th>Total de Ofertas</th>
                     		<th>Operaciones</th>
                     	</tr>
                 	@endif
@@ -71,6 +72,7 @@
                 			<td>{{$anuncio->titulo}}</td>
                 			<td>{{$anuncio->descripcion}}</td>
                 			<td>{{$anuncio->precio}}</td>
+                			<td>{{$total}}</td>
                 			<td>
                     			<a href="{{route('anuncios.show', $anuncio->id)}}">
                 					<img height="20" width="20"  src="{{asset('images/buttons/show.png')}}"
@@ -142,6 +144,7 @@
     	
     	{{-- Ofertas hechas por el usuario --}}
     	<div class="mt-4">
+    		<h3 class="mt-4">Ofertas creadas</h3>
             <table class="table table-striped table-bordered">
             	@forelse($ofertas as $oferta)
             	
@@ -168,10 +171,12 @@
                 					<img height="20" width="20"  src="{{asset('images/buttons/show.png')}}"
                 					alt="Ver detalles" title="Ver detalles">
                 				</a>
-                				<a href="{{route('ofertas.destroy', $oferta->id)}}">
-                					<img height="20" width="20"  src="{{asset('images/buttons/delete.png')}}"
-                					alt="Borrar" title="Borrar">
-                				</a>
+                				<form method="POST" action="{{route('ofertas.destroy', $oferta->id)}}">
+                        			{{ csrf_field() }}
+                        			<input name="_method" type="hidden" value="DELETE">
+                        			<input type="image" alt="Eliminar" src="{{asset('images/buttons/delete.png')}}" height="20" width="20">
+                        			<input name="oferta_id" type="hidden" value="{{ $oferta->id }}">
+                        		</form>
             				</td>
                 		</tr>
             	@empty

@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('titulo', "Detalles del usuario $anuncio->name")
+@section('titulo', "Detalles del usuario $user->name")
 
 @section('contenido')
 	<div class="row">
@@ -15,7 +15,7 @@
     		</tr>
     		<tr>
     			<td>Email</td>
-    			<td><a href="mailto:{{$u->email)}}">{{$user->email}}</a></td>
+    			<td><a href="mailto:{{$user->email}}">{{$user->email}}</a></td>
     		</tr>
     		<tr>
     			<td>Fecha de alta</td>
@@ -31,7 +31,7 @@
     				@foreach($user->roles as $rol)
     				<span class="d-inline-block w-50"> - {{$rol->rol}}</span>
     				<form class="d-inline-block p-1" method="POST"
-    					action="{{ route('admin.user.removeRole') }}">
+    					action="{{ route('admin.user.removeRol') }}">
     					@csrf
     					<input type="hidden" name="_method" value="DELETE">
     					<input type="hidden" name="user_id" value="{{ $user->id }}">
@@ -45,7 +45,7 @@
     		<tr>
     			<td>Añadir rol</td>
     			<td>
-    				<form method="POST" action="{{ route('admin.user.setRole') }}">
+    				<form method="POST" action="{{ route('admin.user.setRol') }}">
     					@csrf
     					<input type="hidden" name="_method" value="POST">
     					<input type="hidden" name="user_id" value="{{ $user->id }}">

@@ -38,9 +38,11 @@
     			<td class="text-center">#<b>{{$u->id}}</b></td>
     			<td><a href="{{route('admin.user.show',$u->id)}}"><b>{{$u->name}}</b></a></td>
     			<td><a href="mailto:{{$u->email}}">{{$u->email}}</a></td>
+    			<td>{{$u->created_at}}</td>
     			<td class="small text-start">
     				@foreach($u->roles as $rol)
     				- {{$rol->rol}}<br>
+    				@endforeach
 				</td>
     			<td class="text-center">
     				<a href="{{route('admin.user.show', $u->id)}}">

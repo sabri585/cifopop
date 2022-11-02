@@ -30,63 +30,36 @@ use Illuminate\Support\Facades\Auth;
 Route::get('/', [WelcomeController::class, 'index'])->name('portada');
 
 
+//RUTAS PARA ANUNCIOS
+
+//PARA BUSCAR anuncios
+Route::match(['GET','POST'], '/anuncios/search',[AnuncioController::class, 'search'])
+    ->name('anuncios.search');
+    
+//eliminación definitiva del anuncio
+//URL firmada para más seguridad
+Route::delete('anuncios/purge', [AnuncioController::class, 'purge'])
+    ->name('anuncios.purge');
+//      ->middleware('signed'); //para asignar firma a la URL
 
 //CRUD DE ANUNCIOS
 Route::resource('/anuncios', AnuncioController::class);
 
-//lista de anuncios
-// Route::get('/anuncios', [AnuncioController::class, 'index'])->name('anuncios.index');
-  
-//PARA BUSCAR anuncios
-Route::match(['GET','POST'], '/anuncios/search',[AnuncioController::class, 'search'])
-    ->name('anuncios.search');
-
-//grupo de rutas a las que le aplicaremos un middleware
-// Route::group(['auth', 'middleware'=>IsLocked::class], function(){
-    
-//     //formulario de creación de anuncios
-//     Route::get('/anuncios/create', [AnuncioController::class, 'create'])
-//     ->name('anuncios.create')->middleware('auth','is_not_employed');
-    
-//     //guardar el anuncio
-//     Route::get('/anuncios', [AnuncioController::class, 'store'])
-//     ->name('anuncios.store');
-    
-    //eliminación definitiva del anuncio
-    //URL firmada para más seguridad
-    Route::delete('anuncios/purge', [AnuncioController::class, 'purge'])
-    ->name('anuncios.purge');
-    //     ->middleware('signed'); //para asignar firma a la URL
-    
-    //eliminación con soft deletes
-    Route::delete('anuncios', [AnuncioController::class, 'destroy'])
+//eliminación con soft deletes
+Route::delete('anuncios/{anuncio}', [AnuncioController::class, 'destroy'])
     ->name('anuncios.destroy');
-    
-    
-    //formulario de edición
-//     Route::get('/anuncios/{anuncio}/edit', [AnuncioController::class, 'edit'])
-//     ->name('anuncios.edit');
-    
-    //restauración del anuncio
-    Route::get('/anuncios/{anuncio}/restore', [AnuncioController::class, 'restore'])
-    ->name('anuncios.restore');
-    
-    //RUTA PARA LA CONFIRMACIÓN DE BORRADO CON SOFT DELETES
-    Route::get('anuncios/{anuncio}/delete', [AnuncioController::class, 'delete'])
-    ->name('anuncios.delete');
-    
-    //RUTA PARA LA CONFIRMACIÓN DE ELIMINACIÓN DEFINITIVA
-    Route::get('anuncios/{anuncio}/remove', [AnuncioController::class, 'remove'])
-    ->name('anuncios.remove');
-    
-    //actualizar anuncio
-//     Route::match(['PUT','PATCH'], '/anuncios/{anuncio}',[AnuncioController::class, 'update'])
-//     ->name('anuncios.update');
-// });
 
-//detalles del anuncio
-// Route::get('anuncios/{anuncio}', [AnuncioController::class, 'show'])
-//     ->name('anuncios.show');
+//restauración del anuncio
+Route::get('/anuncios/{anuncio}/restore', [AnuncioController::class, 'restore'])
+    ->name('anuncios.restore');
+
+//RUTA PARA LA CONFIRMACIÓN DE BORRADO CON SOFT DELETES
+Route::get('anuncios/{anuncio}/delete', [AnuncioController::class, 'delete'])
+    ->name('anuncios.delete');
+
+//RUTA PARA LA CONFIRMACIÓN DE ELIMINACIÓN DEFINITIVA
+Route::get('anuncios/{anuncio}/remove', [AnuncioController::class, 'remove'])
+    ->name('anuncios.remove');
 
     
     
@@ -94,15 +67,15 @@ Route::match(['GET','POST'], '/anuncios/search',[AnuncioController::class, 'sear
 
 //ver oferta 
 //TODO: es correcto ponerle ruta si va en la vista de anuncio??
-Route::get('oferta/{oferta}', [OfertaController::class, 'show'])
-    ->name('ofertas.show');
+// Route::get('oferta/{oferta}', [OfertaController::class, 'show'])
+//     ->name('ofertas.show');
     
 //guardar la oferta
-Route::post('/oferta/store', [OfertaController::class, 'store'])
+Route::post('/ofertas/store', [OfertaController::class, 'store'])
     ->name('ofertas.store');
 
 //eliminar oferta
-Route::delete('/oferta/destroy', [OfertaController::class, 'destroy'])
+Route::delete('/ofertas/{oferta}', [OfertaController::class, 'destroy'])
     ->name('ofertas.destroy');
 
 //RUTAS PARA LA GESTIÓN DE USUARIOS

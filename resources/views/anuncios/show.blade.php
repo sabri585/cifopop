@@ -63,7 +63,7 @@
     	</div>
     	
     	{{-- Para crear ofertas --}}
-    	@if (!Auth::user()->hasRole('administrador', 'editor') || !Auth::user()->isOwner($anuncio))
+    	@if (! (Auth::user()->hasRole('administrador', 'editor') || Auth::user()->isOwner($anuncio)))
         	<form class="my-2 border p-5" method="POST" action="{{route('ofertas.store')}}" enctype="multipart/form-data">
     		{{csrf_field()}}
         		<div class="card">
@@ -73,6 +73,7 @@
             			<input name="texto" type="text" class="up form-control col-sm-10"
             			id="inputTexto" placeholder="Comente su oferta" maxlength="255" required
             			value="{{old('texto')}}">
+            			<input type="hidden" name="anuncio_id" value="{{ $anuncio->id }}">
             		</div>
             		<div class="form-group row">
             			<label for="inputVigencia" class="col-sm-2 col-form-label">Fecha Vigencia</label>
@@ -94,29 +95,36 @@
     		</form>
     	@endif
     	
-    	{{-- Para ver las ofertas creadas 
+    	{{-- Para ver las ofertas creadas --}}
+    	{{-- @if(Auth::user()->isOwner($anuncio)) --}}
         	 <table class="table table-striped table-bordered">
+        	 	<tr>
+        			<th>ID</th>
+        			<th>Texto</th>
+        			<th>Descripción</th>
+        			<th>Importe</th>
+        			<th>Propietario</th>
+        			<th>Operaciones</th>
+    			</tr>
             	@foreach($ofertas as $oferta)
-                	<tr>
-            			<td>Texto</td>
+            		<tr>
+            			<td>#<b>{{$oferta->id}}</b></td>
             			<td>{{$oferta->texto}}</td>
-            		</tr>
-            		<tr>
-            			<td>Descripción</td>
-            			<td>{{$oferta->descripcion}}</td>
-            		</tr>
-            		<tr>
-            			<td>Importe</td>
+            			<td>{{$oferta->fechaVigencia}}</td>
             			<td>{{$oferta->importe}}</td>
-            		</tr>
-            		<tr>
-            			<td>Propietario</td>
-            			<td>{{$oferta->user? $oferta->user->name : 'Sin propietario'}}</td>
+            			<td>{{$oferta->user_id}}</td>
+            			<td>
+            				{{-- poner dentro de un form o directamente un enlace que rediriga a otra vista --}}
+            				<button type="submit" class="btn btn-success m-2 mt-5">Aceptar</button>
+    						<button type="submit" class="btn btn-secondary m-2 mt-5">Rechazar</button>
+            			</td>
             		</tr>
         		@endforeach
     		</table>
+		{{-- @endif --}}
 		
-		@if (Auth::user()->isPropietario($oferta))
+		{{-- Eliminar la oferta creada --}}
+		{{-- @if (Auth::user()->isOwner($oferta)) 
 		<div class="text-center">
     		<a onclick='if(confirm("¿Estás seguro de que deseas eliminar la oferta?"))
     						this.nextElementSibling.submit();'>
@@ -125,7 +133,8 @@
     		<form method="POST" class="d-none" action="{{ route('ofertas.destroy') }}">
     			@csrf
     			<input name="_method" type="hidden" value="DELETE">
-    			<input name="bike_id" type="hidden" value="{{ $bike->id }}">
+    			<input type="image" alt="Eliminar" src="{{asset('images/buttons/delete.png')}}" height="20" width="20">
+    			<input name="oferta_id" type="hidden" value="{{ $oferta->id }}">
     		</form>
 		</div> 
 		@endif --}}

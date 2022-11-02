@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\DB;
 
 class AnuncioController extends Controller
 {
@@ -133,8 +134,16 @@ class AnuncioController extends Controller
      */
     public function show(Anuncio $anuncio)
     {
+        //recuperar todas las ofertas del anuncio
+        $ofertas = DB::table('ofertas')
+        ->join('anuncios', 'anuncios.id', '=', 'ofertas.anuncio_id')
+        ->join('users', 'users.id', '=', 'ofertas.user_id')
+        ->select('ofertas.*', 'users.name', 'users.email', 'anuncios.titulo')
+        ->where('ofertas.anuncio_id', '=', $anuncio->id)
+        ->get();
+        
         //cargar la vista y pasarle el anuncio
-        return view('anuncios.show', ['anuncio'=>$anuncio]);
+        return view('anuncios.show', ['anuncio'=>$anuncio, 'ofertas'=>$ofertas]);
     }
 
     /**
@@ -164,10 +173,10 @@ class AnuncioController extends Controller
     public function update(AnuncioUpdateRequest $request, Anuncio $anuncio)
     {
         //autorización mediante policy
-        if ($request->user()->cant('update', $anuncio)) {
+        /*if ($request->user()->cant('update', $anuncio)) {
             abort(401, 'No puedes actualizar un anuncio que no es tuyo');
         }
-        
+        */
         //tomar los datos del formulario
         $datos = $request->only('titulo', 'descripcion', 'precio');
         
@@ -239,9 +248,11 @@ class AnuncioController extends Controller
          if ($request->user()->cant('delete', $anuncio)) {
              abort(401, 'No puedes borrar un anuncio que no es tuyo');
          }
-         
+//          dd($request->input('id'));
         //soft delete
         $anuncio->delete();
+        
+        
         
         //comprobamos si hay que retornar a algún sitio concreto
         $redirect = Session::has('returnTo') ?
@@ -287,7 +298,7 @@ class AnuncioController extends Controller
         
         //recuperar la moto borrada
         $anuncio = Anuncio::withTrashed()->find($request->input('anuncio_id'));
-        
+
         //autorización mediante policy
         if ($request->user()->cant('delete', $anuncio)) {
           abort(401, 'No puedes borrar un anuncio que no es tuyo');

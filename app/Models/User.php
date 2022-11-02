@@ -51,9 +51,9 @@ class User extends Authenticatable implements MustVerifyEmail
     
     //método que recupera todas las ofertas relacionadas con el usuario
     //como la relación es 1 a N, usaremos el método hasMany()
-//     public function ofertas(){
-//         return $this->hasMany('App\Models\Oferta');
-//     }
+     public function ofertas(){
+         return $this->hasMany('App\Models\Oferta');
+     }
     
     //Método que recupera los roles de un usuario
     public function roles(){
