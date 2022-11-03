@@ -51,7 +51,7 @@
     					<input type="hidden" name="user_id" value="{{ $user->id }}">
     					<select class="form-control w-50 d-inline" name="role_id">
     					@foreach($user->remainingRoles() as $rol)
-    						<option value="{{ $rol->id }}">{{ $rol->role }}</option>
+    						<option value="{{ $rol->id }}">{{ $rol->rol }}</option>
 						@endforeach
     					</select>
     					<input type="submit" class="btn btn-success px-3 ml-1" value="Añadir">

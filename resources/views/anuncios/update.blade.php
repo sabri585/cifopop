@@ -66,5 +66,4 @@
 
 @section('enlaces')
 	@parent
-	<a href="{{route('anuncios.index')}}" class="btn btn-primary m-2">Tienda</a>
 @endsection

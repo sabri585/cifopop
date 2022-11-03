@@ -15,6 +15,12 @@ class OfertaController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+    public function __construct(){
+        
+        //middleware is_not_employed para la creación de ofertas
+        $this->middleware('is_not_employed')->only('store');
+    }
+    
     public function store(OfertaRequest $request, Anuncio $anuncio)
     {
         //recuperar datos del formulario

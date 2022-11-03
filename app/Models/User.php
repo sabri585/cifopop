@@ -65,7 +65,6 @@ class User extends Authenticatable implements MustVerifyEmail
         
         $actualRoles = $this->roles; //user roles
         $allRoles = Role::all();     //todos los roles
-        
         //retorna todos los roles menos los que ya tiene el usuario
         return $allRoles->diff($actualRoles);
     }

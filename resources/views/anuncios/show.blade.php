@@ -96,8 +96,12 @@
     	@endif
     	
     	{{-- Para ver las ofertas creadas --}}
-    	{{-- @if(Auth::user()->isOwner($anuncio)) --}}
+    	@if(Auth::user()->isOwner($anuncio) || Auth::user()->hasRole(['administrador', 'editor']))
+    		<h3>Ofertas del anuncio</h3>
         	 <table class="table table-striped table-bordered">
+        	 @forelse($ofertas as $oferta)
+        	 
+        	 	@if($loop->first)
         	 	<tr>
         			<th>ID</th>
         			<th>Texto</th>
@@ -106,7 +110,7 @@
         			<th>Propietario</th>
         			<th>Operaciones</th>
     			</tr>
-            	@foreach($ofertas as $oferta)
+    			@endif
             		<tr>
             			<td>#<b>{{$oferta->id}}</b></td>
             			<td>{{$oferta->texto}}</td>
@@ -115,33 +119,20 @@
             			<td>{{$oferta->user_id}}</td>
             			<td>
             				{{-- poner dentro de un form o directamente un enlace que rediriga a otra vista --}}
-            				<button type="submit" class="btn btn-success m-2 mt-5">Aceptar</button>
-    						<button type="submit" class="btn btn-secondary m-2 mt-5">Rechazar</button>
+            				@if(Auth::user()->isOwner($anuncio))
+                				<button type="submit" class="btn btn-success m-2 mt-5">Aceptar</button>
+                				<button type="submit" class="btn btn-secondary m-2 mt-5">Rechazar</button>
+            				@endif
             			</td>
             		</tr>
-        		@endforeach
+        		@empty
+            		<tr><td colspan="4">No hay resultados que mostrar.</td></tr>
+            	@endforelse
     		</table>
-		{{-- @endif --}}
-		
-		{{-- Eliminar la oferta creada --}}
-		{{-- @if (Auth::user()->isOwner($oferta)) 
-		<div class="text-center">
-    		<a onclick='if(confirm("¿Estás seguro de que deseas eliminar la oferta?"))
-    						this.nextElementSibling.submit();'>
-    			<button class="btn btn-danger">Eliminar</button>
-    		</a>
-    		<form method="POST" class="d-none" action="{{ route('ofertas.destroy') }}">
-    			@csrf
-    			<input name="_method" type="hidden" value="DELETE">
-    			<input type="image" alt="Eliminar" src="{{asset('images/buttons/delete.png')}}" height="20" width="20">
-    			<input name="oferta_id" type="hidden" value="{{ $oferta->id }}">
-    		</form>
-		</div> 
-		@endif --}}
+		@endif
 	@endauth
 @endsection
 
 @section('enlaces')
 	@parent
-	<a href="{{route('anuncios.index')}}" class="btn btn-primary m-2">Tienda</a>
 @endsection

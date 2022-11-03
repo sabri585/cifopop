@@ -21,11 +21,6 @@ class IsLocked {
         if ($user && $user->hasRole('bloqueado') && !in_array($ruta, $allowed)) {
             return redirect()->route('user.locked');
         }
-        
-//         //Si el usuario está bloqueado redirige a la home desde cualquier operación
-//          if ($request->user()->hasRole('bloqueado')) {
-//              return redirect()->route('home');
-//          };
          
          return $next($request);
     }

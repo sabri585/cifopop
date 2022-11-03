@@ -21,11 +21,13 @@ class AnuncioController extends Controller
     public function __construct(){
         //definimos el middleware
         /*ponemos el middleware auth o verified a todos los métodos excepto:
-         * - lista de motos
-         * - detalles de la moto
-         * - búsqueda de motos
+         * - lista de anuncios
+         * - detalles del anuncio
          */
         $this->middleware('verified')->except('index', 'show', 'search');
+        
+        //middleware is_not_employed para la creación de anuncios
+        $this->middleware('is_not_employed')->only('create', 'store');
         
         //el método para eliminar un anuncio requiere confirmación de clave
         $this->middleware('password.confirm')->only('purge');
@@ -79,8 +81,8 @@ class AnuncioController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
-    {
+    public function create(Request $request)
+    {        
         //muestra el formulario
         return view('anuncios.create');
     }

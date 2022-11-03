@@ -9,17 +9,7 @@ use App\Models\Role;
 use Illuminate\Database\QueryException;
 
 class AdminController extends Controller
-{
-    //método que elimina los anuncios de un usuario bloqueado
-    public function deletedLockedAnuncios(Request $request){
-        /*TODO: al usuario bloqueado se le eliminan todos los anuncios
-         cuando desde la vista de usuarios al pulsar el botón bloquear*/
-        if ($request->user()->hasRole('bloqueado')) {
-            $anuncios = $request->user()->anuncios();
-            $anuncios->delete();
-        };
-    }
-    
+{    
     //muestra los usuarios bloqueados
     public function lockedUsers(Request $request){
         
@@ -49,7 +39,7 @@ class AdminController extends Controller
     public function userSearch(Request $request){
         $request->validate(['name' => 'max:32', 'email' => 'max:32']);
         
-        //toma los valores que llegan para nombre y email
+        //toma los valores que llegan para nombre y email y rol
         $name = $request->input('name','');
         $email = $request->input('email','');
         
@@ -62,11 +52,11 @@ class AdminController extends Controller
             ->appends(['name' => $name, 'email' => $email]);
         
         //retorna la vista de lista con el filtro aplicado
-        return view('admin.users.list', ['users' => $users, 'name'=>$name, 'email'=>$email]);
+            return view('admin.users.list', ['users' => $users, 'name'=>$name, 'email'=>$email]);
     }
     
     //añade un rol a un usuario
-    public function setRole(Request $request){
+    public function setRol(Request $request){
         $rol = Role::find($request->input('role_id'));
         $user = User::find($request->input('role_id'));
         
@@ -76,6 +66,13 @@ class AdminController extends Controller
                 'created_at' => now(),
                 'updated_at' => now()
             ]);
+            
+            //eliminar anuncios y ofertas del usuario bloqueado
+            if ($rol->rol == 'bloqueado') {
+                $user->anuncios()->delete();
+                $user->ofertas()->delete();
+            }
+            
             return back()->with('success', "Rol $rol->rol añadido a $user->name correctamente.");
             
         //si no lo consigue... (use Illuminate\Database\QueryException)
@@ -86,7 +83,7 @@ class AdminController extends Controller
     }
     
     //quita un rol a un usuario
-    public function removeRole(Request $request){
+    public function removeRol(Request $request){
         $rol = Role::find($request->input('role_id'));
         $user = User::find($request->input('role_id'));
         

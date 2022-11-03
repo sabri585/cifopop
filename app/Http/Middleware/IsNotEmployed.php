@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 class IsNotEmployed {
     public function handle(Request $request, Closure $next) {
         
-        if ($request->user()->hasRole('administrador', 'editor')) {
+        if ($request->user()->hasRole(['administrador', 'editor'])) {
             abort(403, 'Operación no permitida para empleados.');
         };
         
