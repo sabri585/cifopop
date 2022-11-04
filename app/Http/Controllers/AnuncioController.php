@@ -174,11 +174,6 @@ class AnuncioController extends Controller
      */
     public function update(AnuncioUpdateRequest $request, Anuncio $anuncio)
     {
-        //autorización mediante policy
-        /*if ($request->user()->cant('update', $anuncio)) {
-            abort(401, 'No puedes actualizar un anuncio que no es tuyo');
-        }
-        */
         //tomar los datos del formulario
         $datos = $request->only('titulo', 'descripcion', 'precio');
         
@@ -250,11 +245,9 @@ class AnuncioController extends Controller
          if ($request->user()->cant('delete', $anuncio)) {
              abort(401, 'No puedes borrar un anuncio que no es tuyo');
          }
-//          dd($request->input('id'));
+         
         //soft delete
         $anuncio->delete();
-        
-        
         
         //comprobamos si hay que retornar a algún sitio concreto
         $redirect = Session::has('returnTo') ?

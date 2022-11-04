@@ -93,9 +93,4 @@ class User extends Authenticatable implements MustVerifyEmail
     public function isOwner(Anuncio $anuncio):bool{
         return $this->id == $anuncio->user_id;
     }
-    
-    //método para saber si un usuario es propietario de una oferta
-    public function isPropietario(Oferta $oferta):bool{
-        return $this->id == $oferta->user_id;
-    }
 }
