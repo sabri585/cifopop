@@ -1,16 +1,51 @@
 @extends('layouts.master')
 
+@section('titulo', 'Lista de usuarios bloqueados')
+
 @section('contenido')
-	<div class="container row mt-2">
-		<div class="col-10 alert alert-danger p-4">
-			<p>Has sido <b>bloqueado</b> por un administrador.</p>
-			<p>Si no estás de acuerdo o quieres cononcer los motivos, contacta mediante el
-				<a href="{{ route('contacto') }}">formulario de contacto</a>.</p>
-		</div>
-		<figure class="col-2">
-    		<img class="rounded img-fluid" alt="Usuario bloqueado"
-    			src="{{ asset('/'.config('filesystems.usersImageDir')).'/locked.png'}}">
-    		<figcaption class="figure-caption text-center">Usuario bloqueado</figcaption>
-		</figure>
+	<div class="row p-3">
+		<div class="col-4"></div>
+		<form method="GET" action="{{route('admin.users.search')}}" class="col-8">
+    		<div class="row">
+    			<input name="name" type="text" class="col form-control mr-2 mb-2"
+    				placeholder="Nombre" maxlength="16"
+    				value="{{ $name ?? '' }}">
+    				
+        		<input name="email" type="text" class="col form-control mr-2 mb-2"
+        				placeholder="Email" maxlength="16"
+        				value="{{ $email ?? '' }}">
+        				
+        		<button type="submit" class="col btn btn-primary mr-2 mb-2">Buscar</button>
+        		
+        		<a href="{{ route('admin.users') }}">
+        			<button type="button" class="col btn btn-primary mb-2">Quitar filtro</button>
+        		</a>
+    		</div>
+		</form>
 	</div>
+	
+    <table class="table table-striped table-bordered">
+		<tr>
+    		<th>ID</th>
+    		<th>Nombre</th>
+    		<th>Email</th>
+    		<th>Fecha de alta</th>
+    		<th>Operaciones</th>
+    	</tr>
+    	@foreach($lockedUsers as $u)
+    		<tr>
+    			<td class="text-center">#<b>{{$u->id}}</b></td>
+    			<td><a href="{{route('admin.user.show',$u->id)}}"><b>{{$u->name}}</b></a></td>
+    			<td><a href="mailto:{{$u->email}}">{{$u->email}}</a></td>
+    			<td>{{$u->created_at}}</td>
+    			<td class="text-center">
+    				<a href="{{route('admin.user.show', $u->id)}}">
+    					<img height="20" width="20"  src="{{asset('images/buttons/show.png')}}"
+    					alt="Ver detalles" title="Ver detalles">
+    				</a>
+    			</td>
+    		</tr>
+		@endforeach
+    </table>
+    
 @endsection

@@ -8,6 +8,6 @@ class UserController extends Controller
 {
     //carga la vista para los usuarios bloqueados
     public function locked(){
-        return view('admin.users.locked');
+        return view('user.locked');
     }
 }

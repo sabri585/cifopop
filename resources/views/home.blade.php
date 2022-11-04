@@ -56,7 +56,7 @@
                     		<th>Título</th>
                     		<th>Descripción</th>
                     		<th>Precio</th>
-                    		{{-- <th>Total de Ofertas</th> --}}
+                    		<th>Total de Ofertas</th>
                     		<th>Operaciones</th>
                     	</tr>
                 	@endif
@@ -73,7 +73,7 @@
                 			<td>{{$anuncio->titulo}}</td>
                 			<td>{{$anuncio->descripcion}}</td>
                 			<td>{{$anuncio->precio}}</td>
-                			{{-- <td>{{$total}}</td> --}}
+                			<td>{{$anuncio->ofertas_count}}</td>
                 			<td>
                     			<a href="{{route('anuncios.show', $anuncio->id)}}">
                 					<img height="20" width="20"  src="{{asset('images/buttons/show.png')}}"

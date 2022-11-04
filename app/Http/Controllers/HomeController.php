@@ -27,15 +27,12 @@ class HomeController extends Controller
     {
         
         //recuperar los anuncios no borrados del usuario
-        $anuncios = $request->user()->anuncios()->paginate(config('pagination.anuncios', 10));
+        $anuncios = Anuncio::where('user_id', 'like', $request->user()->id)->withCount('ofertas')->paginate(config('pagination.anuncios', 10));
         
         //recuperar los anuncios borrados del usuario
         $deletedAnuncios = $request->user()->anuncios()->onlyTrashed()->get();
-        
-//         //total de ofertas por anuncio TODO: no funciona correctamente
-//          $total = DB::table('ofertas')->where('ofertas.user_id', '=', $request->user()->id)->count();
-        
-        //recuperar todas las ofertas
+      
+        //recuperar todas las ofertas que ha hecho el user
         $ofertas = DB::table('ofertas')
             ->join('anuncios', 'anuncios.id', '=', 'ofertas.anuncio_id')
             ->join('users', 'users.id', '=', 'ofertas.user_id')
@@ -43,11 +40,8 @@ class HomeController extends Controller
             ->where('ofertas.user_id', '=', $request->user()->id)
             ->get();
         
-        //recuperar las ofertas que el usuario ha hecho a otros
-//         $ofertas = $request->user()->ofertas()->paginate(config('pagination.anuncios', 10));
-        
         //cargar la vista de home pasándole los anuncios
             return view('home', ['anuncios'=>$anuncios, 'deletedAnuncios'=>$deletedAnuncios,
-                            'ofertas'=>$ofertas, /*'total'=>$total*/]);
+                            'ofertas'=>$ofertas]);
     }
 }

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Anuncio;
+use Illuminate\Support\Facades\DB;
 use App\Models\User;
 use App\Models\Role;
 use Illuminate\Database\QueryException;
@@ -14,8 +14,11 @@ class AdminController extends Controller
     public function lockedUsers(Request $request){
         
         //recuperar los usuarios bloqueados
-        $lockedUsers = $request->user()->hasRole('bloqueado')
-            ->get()->paginate(config('pagination.users', 10));
+        $lockedUsers = DB::table('users')
+            ->join('role_user', 'users.id', '=', 'role_user.user_id')
+            ->join('roles', 'roles.id', '=', 'role_user.role_id')
+            ->select('users.*', 'roles.rol')
+            ->where('rol', '=', 'bloqueado')->get(); //->paginate(config('pagination.users', 10))
         
         //cargar la vista de usuarios bloqueados pasándole los usuarios
         return view('admin.users.locked', ['lockedUsers' => $lockedUsers]);
@@ -58,7 +61,7 @@ class AdminController extends Controller
     //añade un rol a un usuario
     public function setRol(Request $request){
         $rol = Role::find($request->input('role_id'));
-        $user = User::find($request->input('role_id'));
+        $user = User::find($request->input('user_id'));
         
         //intenta añadir el rol
         try {
@@ -85,7 +88,7 @@ class AdminController extends Controller
     //quita un rol a un usuario
     public function removeRol(Request $request){
         $rol = Role::find($request->input('role_id'));
-        $user = User::find($request->input('role_id'));
+        $user = User::find($request->input('user_id'));
         
         //intenta quitar el rol
         try {

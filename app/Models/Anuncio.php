@@ -17,4 +17,10 @@ class Anuncio extends Model
     public function user(){
         return $this->belongsTo('App\Models\User');
     }
+    
+    //método que recupera todas las ofertas relacionadas con el anuncio
+    //como la relación es 1 a N, usaremos el método hasMany()
+    public function ofertas(){
+        return $this->hasMany('App\Models\Oferta');
+    }
 }
